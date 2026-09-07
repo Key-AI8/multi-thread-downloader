@@ -7,6 +7,7 @@ import {
   Loader2,
   CheckCircle,
   Info,
+  Link2,
 } from 'lucide-react';
 import { MultiThreadDownloader } from '@/lib/downloader';
 import type { DownloadStatus, ThreadState, HistoryItem } from '@/lib/types';
@@ -152,66 +153,70 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-cyan-500/[0.04] rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-blue-500/[0.03] rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-4 py-8 sm:py-12">
-        <header className="mb-8 text-center">
-          <div className="inline-flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-              <DownloadCloud className="w-6 h-6 text-white" />
+      <div className="relative max-w-3xl mx-auto px-4 py-8 sm:py-14">
+        <header className="mb-10 text-center">
+          <div className="inline-flex items-center gap-3 mb-3">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-xl shadow-cyan-500/25">
+              <DownloadCloud className="w-7 h-7 text-white" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold">多线程下载器</h1>
           </div>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
+            多线程下载器
+          </h1>
           <p className="text-sm text-slate-500">
             支持 16 / 32 / 64 / 256 / 512 线程并行下载，加速文件获取
           </p>
         </header>
 
-        <div className="space-y-6">
-          <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-800 p-4 sm:p-5">
-            <label className="text-sm font-medium text-slate-300 mb-2 block">
-              下载链接
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !isBusy) handleDownload();
-                }}
-                placeholder="https://example.com/large-file.zip"
-                disabled={isBusy}
-                className="flex-1 bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition-all disabled:opacity-50"
-              />
-              {isBusy ? (
-                <button
-                  onClick={handleCancel}
-                  className="px-5 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 transition-all flex items-center gap-2 text-sm font-medium whitespace-nowrap"
-                >
-                  <X className="w-4 h-4" />
-                  取消
-                </button>
-              ) : (
-                <button
-                  onClick={handleDownload}
-                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-400 hover:to-blue-500 transition-all flex items-center gap-2 text-sm font-medium shadow-lg shadow-cyan-500/20 whitespace-nowrap"
-                >
-                  <Download className="w-4 h-4" />
-                  开始下载
-                </button>
-              )}
+        <div className="space-y-5">
+          <div className="bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-800/80 p-5 sm:p-6 space-y-5">
+            <div>
+              <label className="text-sm font-medium text-slate-300 mb-2 block">
+                下载链接
+              </label>
+              <div className="relative">
+                <Link2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 pointer-events-none" />
+                <input
+                  type="text"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !isBusy) handleDownload();
+                  }}
+                  placeholder="https://example.com/large-file.zip"
+                  disabled={isBusy}
+                  className="w-full bg-slate-950/60 border border-slate-700/80 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/30 transition-all disabled:opacity-50"
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-800 p-4 sm:p-5">
             <ThreadSelector
               value={threadCount}
               onChange={setThreadCount}
               disabled={isBusy}
             />
+
+            {isBusy ? (
+              <button
+                onClick={handleCancel}
+                className="w-full px-5 py-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 transition-all flex items-center justify-center gap-2 text-sm font-medium"
+              >
+                <X className="w-4 h-4" />
+                取消下载
+              </button>
+            ) : (
+              <button
+                onClick={handleDownload}
+                className="w-full px-5 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-400 hover:to-blue-500 transition-all flex items-center justify-center gap-2 text-sm font-medium shadow-lg shadow-cyan-500/20"
+              >
+                <Download className="w-4 h-4" />
+                开始下载
+              </button>
+            )}
           </div>
 
           {error && (
@@ -227,7 +232,7 @@ export default function App() {
           )}
 
           {status !== 'idle' && (
-            <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-800 p-4 sm:p-5 space-y-4 animate-fade-in">
+            <div className="bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-800/80 p-5 sm:p-6 space-y-4 animate-fade-in">
               <div className="flex items-center gap-2">
                 {(status === 'preparing' ||
                   status === 'downloading' ||
@@ -286,18 +291,17 @@ export default function App() {
           )}
 
           {status === 'idle' && !error && (
-            <div className="bg-slate-900/30 border border-slate-800 rounded-xl p-4 flex items-start gap-3">
+            <div className="bg-slate-900/30 border border-slate-800/60 rounded-xl p-4 flex items-start gap-3">
               <Info className="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5" />
               <div className="text-xs text-slate-500 leading-relaxed">
                 支持并行下载和自动重试。浏览器对同一域名的并发连接数有限制（通常为
-                6
-                个），超出部分将自动排队。服务器需支持 HTTP Range
-                请求和 CORS 跨域才能使用多线程下载。
+                6 个），超出部分将自动排队。服务器需支持 HTTP Range 请求和
+                CORS 跨域才能使用多线程下载。
               </div>
             </div>
           )}
 
-          <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-800 p-4 sm:p-5">
+          <div className="bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-800/80 p-5 sm:p-6">
             <HistoryList
               items={history}
               onClear={handleClearHistory}
@@ -306,7 +310,7 @@ export default function App() {
           </div>
         </div>
 
-        <footer className="mt-8 text-center text-xs text-slate-600">
+        <footer className="mt-10 text-center text-xs text-slate-600">
           多线程下载器 · 基于 HTTP Range 请求实现并行下载
         </footer>
       </div>
